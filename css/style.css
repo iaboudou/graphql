@@ -1,0 +1,33 @@
+body {
+    background: #020024;
+    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(0, 0, 0, 1) 0%, rgba(2, 0, 130, 1) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+#logo{
+    height: auto;
+    width: 30rem;
+}
+
+.login {
+  width: 250px;
+  padding: 10px;
+  transition: border 0.4s;
+  border: 2px solid #e1d6ff;
+  border-radius: 5px;
+  font-size: 17px;
+  outline: none;
+}
+
+.login:focus {
+  border-color: #007bff;
+}
+
+.mp{
+    margin-top: 6px;
+}
