@@ -1,4 +1,7 @@
-import { Page } from "./pages.js";
+import { LoginPage } from "./login/init.js";
 
-let page = new Page();
+
+// login page
+let page = new LoginPage();
 page.renderLogin();
+page.submitLogin()
