@@ -37,8 +37,3 @@ export class Login {
         document.getElementById('submit-error').style.display = 'block'
     }
 }
-
-export class Profile {
-    constructor() { }
-    render(container) { }
-}

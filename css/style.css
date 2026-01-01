@@ -28,9 +28,9 @@ body {
 
 #logo {
   position: fixed;
-  top: 20px;
-  left: 20px;
-  height: 150px;
+  top: 30px;
+  left: 30px;
+  height: 80px;
   width: auto;
 }
 
@@ -82,4 +82,14 @@ body {
   transform: translateY(-15px);
   color: red;
   display: none;
+}
+
+
+
+/* profile */
+
+#info{
+  background: red;
+  height: 100px;
+  width: 100px;
 }
