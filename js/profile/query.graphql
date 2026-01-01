@@ -1,0 +1,15 @@
+{
+  user{
+    lastName
+  }
+  a: transaction_aggregate (where: {type : {_eq: "xp"}}){
+  	aggregate{
+      sum{amount}
+    }
+  }
+  b: transaction_aggregate(where: {type: {_eq: "level"}}){
+    aggregate{
+      max{amount}
+    }
+  }
+}

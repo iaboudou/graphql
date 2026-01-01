@@ -5,7 +5,7 @@ export class query {
         return `{ user 
                     {
                       id 
-                      login 
+                      login
                     }
                 }`
     }
