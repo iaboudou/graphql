@@ -1,16 +1,11 @@
-import { Info } from "./comonents.js"
-import { query } from "./graphql.js"
+import { Info, query } from "./help.js"
 
+// this is a class includes the profile methods for : fetch full data from "api/graphql-engine/v1/graphql" - render the components
 export class ProfilePage {
     constructor() {
         this.jwt = localStorage.getItem('jwt')
     }
-    renderComponents() {
-        document.body.innerHTML = ''
-        let info = new Info()
-        info.render(document.body)
-    }
-
+    // fetch data
     async fetch() {
         if (!this.jwt) return null
         let q = new query()
@@ -21,7 +16,7 @@ export class ProfilePage {
                 'Authorization': `Bearer ${this.jwt}`
             },
             body: JSON.stringify({
-                query: q.generalInfo()
+                query: await q.generalInfo()
             })
         })
         if (!res.ok) return null
@@ -29,7 +24,19 @@ export class ProfilePage {
         return data
     }
 
-    errorpage(){
+    // the page components
+    renderComponents(data) {
+        document.body.innerHTML = ''
+        document.body.style.justifyContent = ''
+        document.body.style.alignItems = ''
+        document.body.style.gap = '5px'
+        
+        let info = new Info()
+        info.render(document.body, data)
+    }
+
+    // error page
+    errorpage() {
         console.log('error')
     }
 }

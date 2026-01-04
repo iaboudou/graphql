@@ -1,15 +1,23 @@
-{
-  user{
+query data {
+  # Basic user identification
+  a:user{
+    login
+    avatarUrl
+    firstName
     lastName
+    email
+    attrs
   }
-  a: transaction_aggregate (where: {type : {_eq: "xp"}}){
+
+  # XP amount
+  b: transaction_aggregate (where: {type : {_eq: "xp"}}){
   	aggregate{
       sum{amount}
     }
   }
-  b: transaction_aggregate(where: {type: {_eq: "level"}}){
-    aggregate{
-      max{amount}
-    }
+  
+  # level
+  c: transaction(where: {type: {_eq: "level"}}, order_by: {id : desc}, limit: 1) {
+		amount
   }
 }
