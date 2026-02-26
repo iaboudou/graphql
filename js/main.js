@@ -1,20 +1,26 @@
 import { LoginPage } from "./login/init.js";
 import { ProfilePage } from "./profile/init.js";
 
+export let profile = new ProfilePage();
+export let pageLogin = new LoginPage();
 
-// login page
-let page = new LoginPage();
-page.renderLogin();
+window.addEventListener("DOMContentLoaded", async () => {
+  if (localStorage.getItem("logged") === "true") {
+    await profile.Fetch();
+    if (!profile.Information) return profile.errorpage();
 
-// if login happen correctly then render the profile automatically
-page.submitLogin(async () => {
+    profile.renderComponents();
+  } else {
+    // login page
+    pageLogin.renderLogin();
 
-  let profile = new ProfilePage();
-  let data = await profile.fetch()
-  if (!data) {
-    profile.errorpage()
-    return
+    // if login happen correctly then render the profile automatically
+    pageLogin.submitLogin(async () => {
+      localStorage.setItem("logged", "true");
+      await profile.Fetch();
+      if (!profile.Information) return profile.errorpage();
+
+      profile.renderComponents();
+    });
   }
-  profile.renderComponents();
-  console.log('data: ',data)
 });

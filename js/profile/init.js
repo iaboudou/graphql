@@ -4,9 +4,10 @@ import { Info, query } from "./help.js"
 export class ProfilePage {
     constructor() {
         this.jwt = localStorage.getItem('jwt')
+        this.Information = null
     }
     // fetch data
-    async fetch() {
+    async Fetch() {
         if (!this.jwt) return null
         let q = new query()
         let res = await fetch('https://learn.zone01oujda.ma/api/graphql-engine/v1/graphql', {
@@ -21,22 +22,19 @@ export class ProfilePage {
         })
         if (!res.ok) return null
         let data = await res.json()
+        this.Information = data
         return data
     }
 
     // the page components
-    renderComponents(data) {
+    renderComponents() {
         document.body.innerHTML = ''
-        document.body.style.justifyContent = ''
-        document.body.style.alignItems = ''
-        document.body.style.gap = '5px'
-        
         let info = new Info()
-        info.render(document.body, data)
+        info.render()
     }
 
     // error page
     errorpage() {
-        console.log('error')
+        document.body.innerHTML = `<div>can't load the data</div>`
     }
 }

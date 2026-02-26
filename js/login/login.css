@@ -1,0 +1,76 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+
+body form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100vh;
+  gap: 3rem;
+  color: #333333;
+}
+
+#username,
+#password {
+  border: none;
+  border-bottom: 0.5px solid gray;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #aaaaaa;
+  width: 14rem;
+  padding-bottom: 6px;
+}
+
+#username::placeholder,
+#password::placeholder {
+  color: #aaaaaa;
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+}
+
+#username:focus,
+#password:focus {
+  outline: none;
+  color: black;
+}
+
+#welcome {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 32px;
+  color: #222222;
+}
+
+#submit {
+  width: 12rem;
+  padding: 14px 0;
+  background: #5cb85c;
+  color: #ffffff;
+  border: none;
+  border-radius: 25px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease;
+}
+
+#submit:active {
+  transform: scale(0.97);
+}
+
+#error {
+  margin-top: -2.5rem;
+  top: calc(100% + 8px);
+  font-family: "Montserrat", sans-serif;
+  font-size: 12px;
+  color: red;
+  white-space: nowrap;
+  display: none;
+}

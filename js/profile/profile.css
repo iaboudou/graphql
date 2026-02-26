@@ -1,0 +1,8 @@
+#logout {
+  width: 40px;
+  height: 40px;
+  background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsAC2k6tdaxplFd92agzsIRxRNUuEnvUXkqg&s') no-repeat center;
+  background-size: contain;
+  border: none;
+  cursor: pointer;
+}
