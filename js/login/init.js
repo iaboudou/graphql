@@ -1,38 +1,55 @@
-import { Login } from "./components.js";
+import { Auth } from "./auth.js";
+import { components } from "./components.js";
 
 export class LoginPage {
-  constructor() {
-    this.login = null;
-    this.userInfos = { jwt: null };
-    this.isLoggedIn = false;
-    this.data = [];
+  // rendring the login page
+  renderLogin() {
+    let l = new components();
+    l.render();
   }
 
-  // rendring the login page
-  renderLogin = () => {
-    let l = new Login();
-    l.render();
-    this.login = l;
-  };
+  // submit method return the user tocken based on the username & password
+  async submit(username, password) {
+    let auth = new Auth();
+    try {
+      return await auth.getToken(username, password);
+    } catch {
+      return null;
+    }
+  }
 
-  // submit for login
-  submitLogin(fn) {
-    document.getElementById("submit").addEventListener("click", async (e) => {
-      e.preventDefault();
-      let user = document.getElementById("username").value;
-      let psw = document.getElementById("password").value;
-      if (!user || !psw){
-        this.login.ErrorSubmit("all feilds are required");
-        return
-      };
+  //
+  getAuthFromInput() {
+    let username = document.getElementById("username").value || "";
+    let password = document.getElementById("password").value || "";
+    if (!username || !password) {
+      this.ErrorSubmit("all feilds are required");
+    }
+    return [username, password];
+  }
 
-      let a = await this.login.submit(user, psw);
-      if (!a) this.login.ErrorSubmit("Username or password is not correct");
-      else {
-        this.userInfos.jwt = a;
-        localStorage.setItem("jwt", this.userInfos.jwt);
-        if (fn) fn();
-      }
-    });
+  // set jwt, logged on the local storage
+  setAuth(jwt) {
+    localStorage.setItem("jwt", jwt);
+    localStorage.setItem("logged", "true");
+  }
+
+  // delete jwt, logged from the local storage
+  deleteAuth() {
+    localStorage.removeItem("logged");
+    localStorage.removeItem("jwt");
+  }
+
+  // in case of invalid cridential, this method show the error message
+  ErrorSubmit(msg) {
+    let er = document.getElementById("error");
+    er.style.display = "block";
+    er.textContent = msg;
+    er.style.transition = "transform 0.2s ease";
+    er.style.transform = "scale(1.1)";
+
+    setTimeout(() => {
+      er.style.transform = "scale(1)";
+    }, 200);
   }
 }

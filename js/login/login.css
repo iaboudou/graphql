@@ -1,6 +1,7 @@
 body {
   padding: 0;
   margin: 0;
+  background: rgb(250, 250, 250);
 }
 
 body form {
@@ -24,6 +25,7 @@ body form {
   color: #aaaaaa;
   width: 14rem;
   padding-bottom: 6px;
+  background: rgb(250, 250, 250);
 }
 
 #username::placeholder,
@@ -46,10 +48,10 @@ body form {
   color: #222222;
 }
 
-#submit {
+#login {
   width: 12rem;
   padding: 14px 0;
-  background: #5cb85c;
+  background: #028ee0;
   color: #ffffff;
   border: none;
   border-radius: 25px;
@@ -61,7 +63,7 @@ body form {
   transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease;
 }
 
-#submit:active {
+#login:active {
   transform: scale(0.97);
 }
 

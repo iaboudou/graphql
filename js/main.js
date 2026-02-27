@@ -1,26 +1,52 @@
+import { errorpage } from "./error/err.js";
 import { LoginPage } from "./login/init.js";
 import { ProfilePage } from "./profile/init.js";
 
+export let login = new LoginPage();
 export let profile = new ProfilePage();
-export let pageLogin = new LoginPage();
 
 window.addEventListener("DOMContentLoaded", async () => {
-  if (localStorage.getItem("logged") === "true") {
-    await profile.Fetch();
-    if (!profile.Information) return profile.errorpage();
-
-    profile.renderComponents();
-  } else {
-    // login page
-    pageLogin.renderLogin();
-
-    // if login happen correctly then render the profile automatically
-    pageLogin.submitLogin(async () => {
-      localStorage.setItem("logged", "true");
-      await profile.Fetch();
-      if (!profile.Information) return profile.errorpage();
-
-      profile.renderComponents();
-    });
+  switch (localStorage.getItem("logged")) {
+    case "true":
+      let data = await profile.Fetch();
+      if (data.errors) {
+        login.deleteAuth();
+        errorpage();
+        return;
+      } else profile.renderComponents();
+      break;
+    case "error":
+      errorpage();
+      break;
+    default:
+      login.renderLogin();
   }
+
+  document.body.onclick = async (e) => {
+    e.preventDefault();
+
+    switch (e.target.id) {
+      case "logout":
+        login.deleteAuth();
+        login.renderLogin();
+        break;
+
+      case "login":
+        let [username, password] = login.getAuthFromInput();
+        if (!username || !password) break;
+        let token = await login.submit(username, password);
+        if (!token) {
+          login.ErrorSubmit("Username or password is not correct");
+          break;
+        }
+        login.setAuth(token);
+        let data = await profile.Fetch();
+        if (data.errors) {
+          login.deleteAuth();
+          errorpage();
+          break;
+        } else profile.renderComponents();
+        break;
+    }
+  };
 });
