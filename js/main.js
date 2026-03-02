@@ -5,48 +5,63 @@ import { ProfilePage } from "./profile/init.js";
 export let login = new LoginPage();
 export let profile = new ProfilePage();
 
-window.addEventListener("DOMContentLoaded", async () => {
+window.addEventListener("DOMContentLoaded", DO);
+document.body.addEventListener("click", click);
+
+//
+async function DO() {
   switch (localStorage.getItem("logged")) {
     case "true":
       let data = await profile.Fetch();
       if (data.errors) {
         login.deleteAuth();
         errorpage();
-        return;
-      } else profile.renderComponents();
+      } else {
+        profile.renderComponents();
+      }
       break;
+
     case "error":
       errorpage();
       break;
+
     default:
       login.renderLogin();
   }
+}
 
-  document.body.onclick = async (e) => {
-    e.preventDefault();
+//
+async function click(e) {
+  switch (true) {
 
-    switch (e.target.id) {
-      case "logout":
+    case e.target.id === "logout":
+      login.deleteAuth();
+      login.renderLogin();
+      break;
+
+    case e.target.id === "login":
+      let [username, password] = login.getAuthFromInput();
+      if (!username || !password) break;
+
+      let token = await login.submit(username, password);
+      if (!token) {
+        login.ErrorSubmit("Username or password is not correct");
+        break;
+      }
+
+      login.setAuth(token);
+
+      let data = await profile.Fetch();
+      if (data.errors) {
         login.deleteAuth();
-        login.renderLogin();
-        break;
+        errorpage();
+      } else {
+        profile.renderComponents();
+      }
+      break;
 
-      case "login":
-        let [username, password] = login.getAuthFromInput();
-        if (!username || !password) break;
-        let token = await login.submit(username, password);
-        if (!token) {
-          login.ErrorSubmit("Username or password is not correct");
-          break;
-        }
-        login.setAuth(token);
-        let data = await profile.Fetch();
-        if (data.errors) {
-          login.deleteAuth();
-          errorpage();
-          break;
-        } else profile.renderComponents();
-        break;
-    }
-  };
-});
+    case e.target.classList.contains("bar-element"):
+      profile.triggerBarElement(e);
+      break;
+  }
+}

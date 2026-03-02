@@ -1,23 +1,125 @@
-query data {
-  # Basic user identification
-  a:user{
-    login
-    avatarUrl
-    firstName
-    lastName
-    email
-    attrs
-  }
+{
+	# xp :
+	xp: transaction_aggregate(where: {
+    	_and: [
+        { type: { _eq: "xp" }}, 
+        {event: { object: { name: { _eq: "Module" } } } }
+      	]
+  	}){
+    	aggregate{
+      		sum{
+        		amount
+      		}
+    	}
+  	}
 
-  # XP amount
-  b: transaction_aggregate (where: {type : {_eq: "xp"}}){
-  	aggregate{
-      sum{amount}
-    }
-  }
-  
-  # level
-  c: transaction(where: {type: {_eq: "level"}}, order_by: {id : desc}, limit: 1) {
-		amount
+	# level :
+  	level: transaction_aggregate(where: {type: {_eq: "level"}}, order_by: {id : desc}, limit: 1){
+    	aggregate{
+      		max{amount}
+    	}
+  	}
+
+	# total audits :
+	TotalAudits: user{
+    	audits_aggregate(where: {closureType: {_eq: succeeded}}){
+    	  aggregate{
+    	    count
+    	  }
+    	}
+  	}
+
+	# audit auditRatio :
+	AuditRatio: user{
+    	auditRatio
+  	}
+
+
+	# skills :
+	skills:  user {
+        transactions(
+          where: {type: {_in: [
+            "skill_prog", 
+            "skill_go", 
+            "skill_front-end", 
+            "skill_back-end",
+            "skill_js",
+            "skill_html",
+            "skill_tcp",
+            "skill_sql",
+            "skill_algo",
+            "skill_unix",
+            "skill_css",
+            "skill_docker",
+            "skill_game",
+            "skill_stats",
+            "skill_sys-admin"
+          ]}}
+          order_by: {amount: desc}
+        ) {
+          skillType: type
+          skillAmount: amount
+        }
+      }
+
+	# projects :
+    user{
+      infos : 
+      	totalUp
+      	totalDown
+      	auditRatio
+		labels{
+        	labelName
+      	}
+      	xps {
+        	amount
+        	originEventId
+        	userId
+      	}
+     		login
+    		lastName
+      	firstName
+      	attrs
+    	Transactions : transactions(where:{
+       	 	_and: [
+              {object: {parents: {index: {_is_null: true}}}},
+              {transaction_type: {type: {_eq: "xp"}}}
+        	]
+    		}order_by :{createdAt: desc}
+    	){
+      		amount
+      		createdAt
+      		object{
+        		type
+        		name
+        		progresses{
+        	  		group{
+        	    		captainLogin
+        	    		members{
+        	    	  	userLogin
+        	    		}
+        	  		}
+        		}
+      		}
+    	}
+  	}
+
+	#audits
+	audits: user{
+        succeeded :audits_aggregate(where: {closureType: {_eq: succeeded}}){
+        	aggregate{
+          	count
+        	}
+      	}
+      failed: audits_aggregate(where: {closureType: {_eq: failed}}){
+        	aggregate{
+          	count
+        	}
+      	}
+      expired: audits_aggregate(where: {closureType: {_eq: expired}}){
+        	aggregate{
+          	count
+        	}
+      }
   }
 }

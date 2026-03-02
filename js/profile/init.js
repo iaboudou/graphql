@@ -10,6 +10,8 @@ export class ProfilePage {
     let comps = new components();
     comps.CssComponent();
     comps.logoutComponenet();
+    comps.barComponenet();
+    comps.profileComponenet()
   }
 
   // fetch data
@@ -38,5 +40,14 @@ export class ProfilePage {
     let data = await res.json();
     this.Information = data;
     return await data;
+  }
+
+  triggerBarElement(e) {
+    Array.from(document.querySelectorAll('.bar-element')).forEach(ele => {
+      ele.style.color = 'black'
+      ele.style.textDecoration = '';
+    })
+    e.target.style.color = '#028ee0'
+    e.target.style.textDecoration = 'underline';
   }
 }
