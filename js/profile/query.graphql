@@ -37,30 +37,15 @@
 
 	# skills :
 	skills:  user {
-        transactions(
-          where: {type: {_in: [
-            "skill_prog", 
-            "skill_go", 
-            "skill_front-end", 
-            "skill_back-end",
-            "skill_js",
-            "skill_html",
-            "skill_tcp",
-            "skill_sql",
-            "skill_algo",
-            "skill_unix",
-            "skill_css",
-            "skill_docker",
-            "skill_game",
-            "skill_stats",
-            "skill_sys-admin"
-          ]}}
-          order_by: {amount: desc}
-        ) {
-          skillType: type
-          skillAmount: amount
-        }
-      }
+    	transactions(
+    	  where: {type: {_like: "%skill%"}}
+    	  distinct_on: type
+    	  order_by: [{type: asc}, {amount: desc}]
+    	) {
+    	  skillType: type
+    	  skillAmount: amount
+    	}
+  	}
 
 	# projects :
     user{

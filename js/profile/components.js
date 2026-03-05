@@ -105,14 +105,47 @@ export class components {
     }
 
     XP_graph(d){
+
       let data = structuredClone(d)
+
+      // clean the data
+      let a = data.data.user[0].Transactions.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+      let c = {};
+      let salt = 0
+      for (let v of a) {
+        let date = v.createdAt.slice(0,10);
+        if (!c[date]) c[date] = [];
+      
+        if (v.object.type === "exercise") {
+          c[date].push(v);
+        } else {
+          if (c[date].length > 0){
+              c[`${data}${salt}`].push(v)
+              salt++
+          }else {
+            c[date].push(v);
+          }
+        }
+      }
+
+      c = Object.entries(c).map(([_, e]) => {
+          if (e.length > 1){
+              let res = [{
+                object: { name: "checkpoint"},               
+                amount: e.reduce((c, acc) => c + acc.amount, 0)
+              }]
+              return res
+          }
+          return e
+      }).reverse()
+
       let svg = document.getElementById('bar_chart')
 
       let w = 1200
       let h = 500
       let padding = 120
 
-      let amounts = data.data.user[0].Transactions.map(e => e.amount).reverse()
+      let amounts = c.map(e => e[0].amount)
       let max = Math.max(...amounts);
 
       // lines
@@ -133,7 +166,9 @@ export class components {
 
       // barres
       let bars = ""
-      let models = data.data.user[0].Transactions.reverse()
+      let models = c.map(e => e[0])
+      console.log("models: ",models)
+      console.log(models[1])
       amounts.forEach((val, i) => {
         let barHeigth = val * h/ max
         let x = i*barwidth
