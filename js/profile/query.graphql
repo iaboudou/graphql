@@ -82,7 +82,6 @@
       	attrs
     	Transactions : transactions(where:{
        	 	_and: [
-              #{object: {parents: {index: {_is_null: true}}}},
               {transaction_type: {type: {_eq: "xp"}}},
 			  {event: {object: {name: {_eq: "Module"}}}}
         	]
