@@ -4,14 +4,15 @@ import { components } from "./components.js";
 export class ProfilePage {
   constructor() {
     this.Information = null;
+    this.coms = null;
   }
 
   renderComponents() {
     let comps = new components();
+    this.coms = comps;
     comps.CssComponent();
     comps.logoutComponenet();
     comps.barComponenet();
-    comps.profileComponenet()
   }
 
   // fetch data
@@ -43,11 +44,29 @@ export class ProfilePage {
   }
 
   triggerBarElement(e) {
-    Array.from(document.querySelectorAll('.bar-element')).forEach(ele => {
-      ele.style.color = 'black'
-      ele.style.textDecoration = '';
-    })
-    e.target.style.color = '#028ee0'
-    e.target.style.textDecoration = 'underline';
+    Array.from(document.querySelectorAll(".bar-element")).forEach((ele) => {
+      ele.style.color = "black";
+      ele.style.textDecoration = "";
+    });
+    e.target.style.color = "#028ee0";
+    e.target.style.textDecoration = "underline";
+  }
+
+  removemain() {
+    document.querySelector("main")?.remove();
+  }
+
+  Basic_user_identification_page() {
+    this.coms.profileComponenet();
+    this.coms.Basic_user_identification(this.Information);
+  }
+  XP_amount_page() {
+    this.coms.XP_amountHTML();
+    this.coms.XP_amount(this.Information);
+    this.coms.XP_graph(this.Information)
+  }
+  Audits_page(){
+    this.coms.AuditHTML()
+    this.coms.Audit(this.Information)
   }
 }

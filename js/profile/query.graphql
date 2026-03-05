@@ -82,8 +82,9 @@
       	attrs
     	Transactions : transactions(where:{
        	 	_and: [
-              {object: {parents: {index: {_is_null: true}}}},
-              {transaction_type: {type: {_eq: "xp"}}}
+              #{object: {parents: {index: {_is_null: true}}}},
+              {transaction_type: {type: {_eq: "xp"}}},
+			  {event: {object: {name: {_eq: "Module"}}}}
         	]
     		}order_by :{createdAt: desc}
     	){
@@ -116,10 +117,5 @@
           	count
         	}
       	}
-      expired: audits_aggregate(where: {closureType: {_eq: expired}}){
-        	aggregate{
-          	count
-        	}
-      }
   }
 }
