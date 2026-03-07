@@ -155,7 +155,7 @@ export class components {
         if (i == 500) x= 0
         lines += `
           <text x="5" y="${i - 5}" fill="#070707">${x} B</text>
-          <line x1="${padding}" y1="${i}" x2="1300" y2="${i}" stroke="#8d8d8d"></line>
+          <line x1="${padding}" y1="${i}" x2="1200" y2="${i}" stroke="#8d8d8d"></line>
         `;
         x -= max/5
       }
@@ -167,8 +167,6 @@ export class components {
       // barres
       let bars = ""
       let models = c.map(e => e[0])
-      console.log("models: ",models)
-      console.log(models[1])
       amounts.forEach((val, i) => {
         let barHeigth = val * h/ max
         let x = i*barwidth
@@ -208,5 +206,24 @@ export class components {
     
       document.getElementById('s').innerText = `${succeeded} (${succeeded/(succeeded+failed)*100}%)  succeeded`
        document.getElementById('f').innerText = `${failed} (${failed/(failed+succeeded)*100}%)  failed`
+    }
+    skillsHTML(){
+      let m = document.createElement('main')
+      m.innerHTML = `
+        <section id="svg_skills">
+            <svg id="svg-skill" viewBox="0 0 100 60"></svg>
+        </section>
+      `
+      document.body.append(m);
+    }
+    skills(d){
+      let svg = document.getElementById('svg-skill')
+
+
+      let rec = `
+      <rect id="skill-rec" x="0" y="0" width="${5}" height="2.5" fill="blue"></rect>
+      <text id="svg-text" x="0.5" y="1.6">5%</text>`;
+
+      svg.innerHTML += rec
     }
 }

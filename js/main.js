@@ -78,8 +78,11 @@ async function click(e) {
         case e.target.classList.contains("audits"):{
           profile.removemain()
           profile.Audits_page()
-          console.log('here')
-              //  console.log(data.data.audits[0])
+          break;
+        }
+        case e.target.classList.contains("skills"):{
+          profile.removemain()
+          profile.skills_page()
           break;
         }
         default:

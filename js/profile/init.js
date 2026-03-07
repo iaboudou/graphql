@@ -68,11 +68,10 @@ export class ProfilePage {
   Audits_page(){
     this.coms.AuditHTML()
     this.coms.Audit(this.Information)
+  }
 
-    console.log(this.Information.data.user[0].Transactions)
-    // this.Information.data.user[0].Transactions.forEach(e => {
-    //   console.log(e.object.type)
-    // })
-
+  skills_page(){
+    this.coms.skillsHTML()
+    this.coms.skills(this.Information)
   }
 }
