@@ -12,8 +12,10 @@ export class components {
             <div id="welcome">Welcome</div>
             <input id="username" placeholder="Username or Email" autocomplete="username">
             <input id="password" type="password" placeholder="Password" autocomplete="current-password">
-            <button id="login" type="button">Submit</button>
+            <button id="login" type="submit">Submit</button>
             <span id="error"></span>
         </form>`;
   }
+
+  
 }

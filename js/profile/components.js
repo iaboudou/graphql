@@ -27,7 +27,6 @@ export class components {
       <ul id="bar-pages-wrapper">
         <li><a class="bar-element Basic-user-identification">user identification</a></li>
         <li><a class="bar-element XP-amount">XP amount</a></li>
-        <li><a class="bar-element grades">grades</a></li>
         <li><a class="bar-element audits">audits</a></li>
         <li><a class="bar-element skills">skills</a></li>
       </ul>
@@ -104,82 +103,86 @@ export class components {
         if (el) el.textContent = xp + " " + u;
     }
 
-    XP_graph(d){
+ XP_graph(d) {
+  let data = structuredClone(d);
 
-      let data = structuredClone(d)
+  let a = data.data.user[0].Transactions.sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
 
-      // clean the data
-      let a = data.data.user[0].Transactions.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
-      let c = {};
-      let salt = 0
-      for (let v of a) {
-        let date = v.createdAt.slice(0,10);
-        if (!c[date]) c[date] = [];
-      
-        if (v.object.type === "exercise") {
-          c[date].push(v);
-        } else {
-          if (c[date].length > 0){
-              c[`${data}${salt}`].push(v)
-              salt++
-          }else {
-            c[date].push(v);
-          }
-        }
+  let c = {};
+  let salt = 0;
+
+  for (let v of a) {
+    let date = v.createdAt.slice(0, 10);
+    if (!c[date]) c[date] = [];
+
+    if (v.object.type === "exercise") {
+      c[date].push(v);
+    } else {
+      if (c[date].length > 0) {
+        let key = `${date}-${salt}`;
+        if (!c[key]) c[key] = [];
+        c[key].push(v);
+        salt++;
+      } else {
+        c[date].push(v);
       }
-
-      c = Object.entries(c).map(([_, e]) => {
-          if (e.length > 1){
-              let res = [{
-                object: { name: "checkpoint"},               
-                amount: e.reduce((c, acc) => c + acc.amount, 0)
-              }]
-              return res
-          }
-          return e
-      }).reverse()
-
-      let svg = document.getElementById('bar_chart')
-
-      let w = 1200
-      let h = 500
-      let padding = 120
-
-      let amounts = c.map(e => e[0].amount)
-      let max = Math.max(...amounts);
-
-      // lines
-      let lines = ""
-      let x = max
-      for (let i = 0; i <= h; i += 100) {
-        if (i == 500) x= 0
-        lines += `
-          <text x="5" y="${i - 5}" fill="#070707">${x} B</text>
-          <line x1="${padding}" y1="${i}" x2="1200" y2="${i}" stroke="#8d8d8d"></line>
-        `;
-        x -= max/5
-      }
-      svg.innerHTML = lines
-
-
-      let barwidth = Math.max(w/amounts.length, 7)
-
-      // barres
-      let bars = ""
-      let models = c.map(e => e[0])
-      amounts.forEach((val, i) => {
-        let barHeigth = val * h/ max
-        let x = i*barwidth
-        let y = h - barHeigth
-        bars += `
-          <rect x="${x + padding}" y="${y}" width="${barwidth-5}" height="${barHeigth}" fill="#028ee0">
-              <title>${models[i].object.name} : ${val} B</title>
-          </rect>`;
-      })
-
-      svg.innerHTML += bars
     }
+  }
 
+  c = Object.entries(c).map(([_, e]) => {
+    if (e.length > 1) {
+      return [{
+        object: { name: "checkpoint" },
+        amount: e.reduce((acc, cur) => acc + cur.amount, 0)
+      }];
+    }
+    return e;
+  }).reverse();
+
+  let svg = document.getElementById("bar_chart");
+  if (!svg) return;
+
+  let w = 1200;
+  let h = 500;
+  let padding = 120;
+
+  let amounts = c.map(e => e[0].amount);
+  if (!amounts.length) return;
+
+  let max = Math.max(...amounts);
+
+  let lines = "";
+  let x = max;
+  for (let i = 0; i <= h; i += 100) {
+    if (i == 500) x = 0;
+    lines += `
+      <text x="5" y="${i - 5}" fill="#070707">${Math.round(x)} B</text>
+      <line x1="${padding}" y1="${i}" x2="1500" y2="${i}" stroke="#999999"></line> 
+    `;
+
+    x -= max / 5;
+  }
+  svg.innerHTML = lines;
+
+  let barwidth = Math.max(w / amounts.length, 7);
+  let bars = "";
+  let models = c.map(e => e[0]);
+
+  amounts.forEach((val, i) => {
+    let barHeigth = (val * h) / max;
+    let x = i * barwidth;
+    let y = h - barHeigth;
+
+    bars += `
+      <rect x="${x + padding}" y="${y}" width="${barwidth - 5}" height="${barHeigth}" fill="#028ee0">
+        <title>${models[i].object.name} : ${val} B</title>
+      </rect>`;
+  });
+
+  svg.innerHTML += bars;
+}
     AuditHTML(){
       let m = document.createElement('main')
     m.innerHTML = `
@@ -204,26 +207,43 @@ export class components {
       let circonference = 47 * 2 * Math.PI
       document.getElementById('svg-circle-failed').setAttribute('stroke-dasharray', `${circonference * failed/ (succeeded+ failed)} ${circonference * succeeded/ (succeeded+ failed)}`);
     
-      document.getElementById('s').innerText = `${succeeded} (${succeeded/(succeeded+failed)*100}%)  succeeded`
-       document.getElementById('f').innerText = `${failed} (${failed/(failed+succeeded)*100}%)  failed`
+      document.getElementById('s').innerText = `${succeeded} (${Math.round(succeeded / (succeeded + failed) * 100)}%)  succeeded`;
+  document.getElementById('f').innerText = `${failed} (${Math.round(failed / (succeeded + failed) * 100)}%)  failed`;
     }
     skillsHTML(){
-      let m = document.createElement('main')
-      m.innerHTML = `
-        <section id="svg_skills">
-            <svg id="svg-skill" viewBox="0 0 100 60"></svg>
-        </section>
-      `
-      document.body.append(m);
-    }
-    skills(d){
-      let svg = document.getElementById('svg-skill')
+  let m = document.createElement('main')
+  m.innerHTML = `
+    <section id="skills_container">
+      <div id="skills_list"></div>
+    </section>
+  `
+  document.body.append(m)
+}
 
+skills(d){
+  let container = document.getElementById('skills_container')
+  if(!container) return
 
-      let rec = `
-      <rect id="skill-rec" x="0" y="0" width="${5}" height="2.5" fill="blue"></rect>
-      <text id="svg-text" x="0.5" y="1.6">5%</text>`;
+  let t = d?.data?.skills[0]?.transactions || []
+  console.log(t)
+  let s = {}
+  t.forEach(e => {
+    if(!s[e.skillType]) s[e.skillType] = e.skillAmount
+  })
 
-      svg.innerHTML += rec
-    }
+  container.innerHTML = ''
+
+  for(let [skill, val] of Object.entries(s)){
+    let skillDiv = document.createElement('div')
+    skillDiv.className = 'skill-bar-wrapper'
+    skillDiv.innerHTML = `
+      <span class="skill-name">${skill}</span>
+      <div class="progress-bg">
+        <div class="progress-fill" style="width:${val}%;"></div>
+      </div>
+      <span class="skill-value">${val}%</span>
+    `
+    container.append(skillDiv)
+  }
+}
 }
