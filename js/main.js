@@ -5,7 +5,9 @@ import { ProfilePage } from "./profile/init.js";
 export let login = new LoginPage();
 export let profile = new ProfilePage();
 
-login.renderLogin();
+if (localStorage.getItem('logged') != "true"){
+  login.renderLogin();
+}
 
 window.addEventListener("DOMContentLoaded", DO);
 document.body.addEventListener("click", (e) => {
