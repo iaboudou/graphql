@@ -50,8 +50,6 @@
 	# projects :
     user{
       infos : 
-      	totalUp
-      	totalDown
       	auditRatio
 		labels{
         	labelName
@@ -77,14 +75,6 @@
       		object{
         		type
         		name
-        		progresses{
-        	  		group{
-        	    		captainLogin
-        	    		members{
-        	    	  	userLogin
-        	    		}
-        	  		}
-        		}
       		}
     	}
   	}

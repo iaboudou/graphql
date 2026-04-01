@@ -17,7 +17,6 @@ document.body.addEventListener("click", (e) => {
 
 document.addEventListener("keydown", (e) => {
   if (e.key == "Enter") {
-    e.preventDefault();
     let form = document.querySelector("form");
     if (form) {
       click(e);
@@ -57,7 +56,7 @@ async function click(e) {
       break;
 
     // login
-    case e.target.id === "login" || e.key == "Enter":
+    case e?.target?.id === "login" || e?.key == "Enter":
       let [username, password] = login.getAuthFromInput();
       if (!username || !password) break;
 
@@ -80,7 +79,7 @@ async function click(e) {
       break;
 
     // page
-    case e.target.classList.contains("bar-element"):
+    case e?.target?.classList?.contains("bar-element"):
       profile.triggerBarElement(e);
 
       switch (true) {

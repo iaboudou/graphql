@@ -225,7 +225,6 @@ skills(d){
   if(!container) return
 
   let t = d?.data?.skills[0]?.transactions || []
-  console.log(t)
   let s = {}
   t.forEach(e => {
     if(!s[e.skillType]) s[e.skillType] = e.skillAmount
